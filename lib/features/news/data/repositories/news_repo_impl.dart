@@ -32,10 +32,11 @@ class NewsRepoImpl extends BaseNewsRepo {
   Future<Either<Failure, ArticlesResponseModel>> _getTopHeadlinesNewsByCategory(
       {required String category, int pageNumber = 1}) async {
     try {
+      await HiveHelper.cleanExpiredCache(); 
+      
       List<ArticleModel> cachedArticles =
           baseNewsLocalDataSource.getCategoryCachedArticlesPerPage(
-                  category: category, pageNumber: pageNumber)
-              ;
+              category: category, pageNumber: pageNumber);
       final categoryMetadata =
           HiveHelper.getCategoryMetadata(category: category);
       if (cachedArticles.isNotEmpty && categoryMetadata != null) {
